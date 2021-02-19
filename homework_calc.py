@@ -7,11 +7,32 @@ def send_calculation (operation,
                       first_number,
                       second_number,
                       identifier):
+
+    if (operation=="add"):
+        math_op="+"
+    elif (operation=="sub"):
+        math_op="-"
+    else:
+        math_op = "*"
+    print(f"Thread {identifier} :  {first_number}{math_op}{second_number} byla poslana na server.")
+    print("Cekani na server.")
+
     server_path="https://calc.wmwmw.cz/api/"+operation+"/"
-    print (server_path, operation)
     result=requests.post(server_path, json={"first": first_number, "second": second_number}).json()
     result=result["result"]
     results[identifier]=result
+    print((f"Vysledek {identifier} je {result}"))
+
+count_methods= {"add","sub","mul"}
+math_op=""
+while math_op not in count_methods:
+    math_op=input("Zadej matematickou operaci: ").lower()
+a=b=0.0
+while not isinstance(a, int):
+    a=int(input("Zadej hodnotu operandu a: "))
+    print(type(a))
+while not isinstance(b, int):
+    b=int(input("Zadej hodnotu operandu b: "))
 
 
 t1 = Thread(target=send_calculation, args=("add", 3, 5, "#1"))
