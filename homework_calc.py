@@ -1,6 +1,7 @@
 import requests
 from threading import Thread, active_count
 from json import loads
+import re
 
 results={}
 def send_calculation (operation,
@@ -28,14 +29,24 @@ count_methods= {"add","sub","mul"}
 program_end=False
 while not program_end:
     math_op = ""
-    while math_op not in count_methods:
-        math_op=input("Zadej matematickou operaci: ").lower()
-    a=b=0.0
-    while not isinstance(a, int):
-        a=int(input("Zadej hodnotu operandu a: "))
-    while not isinstance(b, int):
-        b=int(input("Zadej hodnotu operandu b: "))
-    thread_no+=1
+    a = b = 0.0
+    repeat_fun_insertion=True
+    while repeat_fun_insertion:
+        inserted_string = input("Zadej: typ operace,a,b ")
+        pattern = r"([a-z]{3})\,(\d+)\,(\d+)"
+        match = re.fullmatch(pattern, inserted_string)
+
+        if match:
+            repeat_fun_insertion=True
+            math_op=match.group(1)
+            if math_op in count_methods:
+                a=match.group(2)
+                b=match.group(3)
+                thread_no += 1
+                repeat_fun_insertion=False
+
+
+
 
     thread_ident="#"+str(thread_no)
     print(thread_ident)
