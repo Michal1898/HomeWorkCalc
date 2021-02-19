@@ -28,20 +28,18 @@ thread_no=0
 count_methods= {"add","sub","mul"}
 program_end=False
 while not program_end:
-    math_op = ""
-    a = b = 0.0
     repeat_fun_insertion=True
     while repeat_fun_insertion:
         inserted_string = input("Zadej: typ operace,a,b ")
-        pattern = r"([a-z]{3})\,(\d+)\,(\d+)"
+        pattern = r"([a-z]{3})\,([+]+\d+|[-]+\d+|\d+)\,([+]+\d+|[-]+\d+|\d+)"
         match = re.fullmatch(pattern, inserted_string)
 
         if match:
             repeat_fun_insertion=True
             math_op=match.group(1)
             if math_op in count_methods:
-                a=match.group(2)
-                b=match.group(3)
+                a=int(match.group(2))
+                b=int(match.group(3))
                 thread_no += 1
                 repeat_fun_insertion=False
 
