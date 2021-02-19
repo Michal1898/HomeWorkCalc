@@ -24,42 +24,40 @@ def send_calculation (operation,
     results[identifier]=result
     print((f"Vysledek {identifier} je {result}"))
 
-thread_no=0
-count_methods= {"add","sub","mul"}
-program_end=False
-while not program_end:
-    repeat_fun_insertion=True
-    while repeat_fun_insertion:
-        inserted_string = input("Zadej: typ operace,a,b ")
-        pattern = r"([a-z]{3})\,([+]+\d+|[-]+\d+|\d+)\,([+]+\d+|[-]+\d+|\d+)"
-        match = re.fullmatch(pattern, inserted_string)
+if __name__ == "__main__":
+    thread_no=0
+    count_methods= {"add","sub","mul"}
+    program_end=False
+    while not program_end:
+        repeat_fun_insertion=True
+        while repeat_fun_insertion:
+            inserted_string = input("Zadej: typ operace,a,b ")
+            pattern = r"([a-z]{3})\,([+]+\d+|[-]+\d+|\d+)\,([+]+\d+|[-]+\d+|\d+)"
+            match = re.fullmatch(pattern, inserted_string)
 
-        if match:
-            repeat_fun_insertion=True
-            math_op=match.group(1)
-            if math_op in count_methods:
-                a=int(match.group(2))
-                b=int(match.group(3))
-                thread_no += 1
-                repeat_fun_insertion=False
+            if match:
+                repeat_fun_insertion=True
+                math_op=match.group(1)
+                if math_op in count_methods:
+                    a=int(match.group(2))
+                    b=int(match.group(3))
+                    thread_no += 1
+                    repeat_fun_insertion=False
 
+        thread_ident="#"+str(thread_no)
+        print(thread_ident)
+        Thread(target=send_calculation, args=(math_op, a, b, thread_ident)).start()
 
+        program_end=input("Ukoncit program?").lower()
+        if program_end=="ano" or program_end=="a":
+            program_end==True
+        else:
+            program_end=False
 
-
-    thread_ident="#"+str(thread_no)
-    print(thread_ident)
-    Thread(target=send_calculation, args=(math_op, a, b, thread_ident)).start()
-
-    program_end=input("Ukoncit program?").lower()
-    if program_end=="ano" or program_end=="a":
-        program_end==True
-    else:
-        program_end=False
-
-print("Program bude ukoncen.")
-print("Ukoncuji se Thready.")
-while(active_count()>1):
-    pass
-print("Vsechny thready ukonceny.")
-print(results)
-print("hotovo")
+    print("Program bude ukoncen.")
+    print("Ukoncuji se thready.")
+    while(active_count()>1):
+        pass
+    print("Vsechny thready ukonceny.")
+    print(results)
+    print("hotovo")
