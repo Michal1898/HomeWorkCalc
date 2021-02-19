@@ -1,5 +1,5 @@
 import requests
-from threading import Thread
+from threading import Thread, active_count
 from json import loads
 
 results={}
@@ -23,33 +23,34 @@ def send_calculation (operation,
     results[identifier]=result
     print((f"Vysledek {identifier} je {result}"))
 
+thread_no=0
 count_methods= {"add","sub","mul"}
-math_op=""
-while math_op not in count_methods:
-    math_op=input("Zadej matematickou operaci: ").lower()
-a=b=0.0
-while not isinstance(a, int):
-    a=int(input("Zadej hodnotu operandu a: "))
-    print(type(a))
-while not isinstance(b, int):
-    b=int(input("Zadej hodnotu operandu b: "))
+program_end=False
+while not program_end:
+    math_op = ""
+    while math_op not in count_methods:
+        math_op=input("Zadej matematickou operaci: ").lower()
+    a=b=0.0
+    while not isinstance(a, int):
+        a=int(input("Zadej hodnotu operandu a: "))
+    while not isinstance(b, int):
+        b=int(input("Zadej hodnotu operandu b: "))
+    thread_no+=1
 
+    thread_ident="#"+str(thread_no)
+    print(thread_ident)
+    Thread(target=send_calculation, args=(math_op, a, b, thread_ident)).start()
 
-t1 = Thread(target=send_calculation, args=("add", 3, 5, "#1"))
-t2 = Thread(target=send_calculation, args=("sub", 13,7, "#2"))
-t3 = Thread(target=send_calculation, args=("mul", 13,7, "#3"))
+    program_end=input("Ukoncit program?").lower()
+    if program_end=="ano" or program_end=="a":
+        program_end==True
+    else:
+        program_end=False
 
-# spouštíme vlákna
-t3.start()
-t2.start()
-t1.start()
-# čekáme na ně
-t1.join()
-print(f"soucet hotov: {results}")
-t2.join()
-print(f"rozdil hotov: {results}")
-t3.join()
-print(f"soucin hotov: {results}")
+print("Program bude ukoncen.")
+print("Ukoncuji se Thready.")
+while(active_count()>1):
+    pass
+print("Vsechny thready ukonceny.")
 print(results)
-# a nakonec...
 print("hotovo")
