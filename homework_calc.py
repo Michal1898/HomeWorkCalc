@@ -1,6 +1,5 @@
 import re
 from threading import Thread, active_count
-
 import requests
 
 results = {}
@@ -16,14 +15,14 @@ def send_calculation(operation,
         math_oper = "-"
     else:
         math_oper = "*"
-    print(f"Thread {identifier} :  {first_number}{math_oper}{second_number} byla poslana na server.")
-    print("Cekani na server.")
+    print(f"Thread {identifier} :  {first_number}{math_oper}{second_number} byla poslána na server.")
+    print("Čekání na server.")
 
     server_path = "https://calc.wmwmw.cz/api/" + operation + "/"
     result = requests.post(server_path, json={"first": first_number, "second": second_number}).json()
     result = result["result"]
     results[identifier] = result
-    print(f"Vysledek {identifier} je {result}")
+    print(f"Výsledek {identifier} je {result}")
 
 
 if __name__ == "__main__":
@@ -51,16 +50,16 @@ if __name__ == "__main__":
         # noinspection SyntaxError
         Thread(target=send_calculation, args=(math_oper, a, b, thread_ident)).start()
 
-        program_end = input("Ukoncit program?").lower()
+        program_end = input("Ukončit program?").lower()
         if program_end == "ano" or program_end == "a":
             program_end = True
         else:
             program_end = False
 
-    print("Program bude ukoncen.")
-    print("Ukoncuji se thready.")
+    print("Program bude ukončen.")
+    print("Ukončují se thready.")
     while active_count() > 1:
         pass
-    print("Vsechny thready ukonceny.")
+    print("Všechny thready ukončeny.")
     print(results)
     print("hotovo")
